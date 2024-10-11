@@ -277,7 +277,7 @@ getDependencyEdit recorder env cabalFilePath buildTarget dependency = do
       logWith recorder Debug $ LogCreatedEdit edit
       pure edit
 
--- | Given a path to a haskell file, returns the closest cabal file.
+-- | Given a path to a haskell file, returns the closest cabal file, except if package.yaml is also present
 --   If cabal file wasn't found, gives Nothing.
 findResponsibleCabalFile :: FilePath -> IO (Maybe FilePath)
 findResponsibleCabalFile haskellFilePath = do
