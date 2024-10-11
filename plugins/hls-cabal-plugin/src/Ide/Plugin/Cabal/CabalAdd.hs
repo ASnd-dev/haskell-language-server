@@ -293,7 +293,12 @@ findResponsibleCabalFile haskellFilePath = do
       cabalFiles <- filterM (\c -> doesFileExist c) objectsCabalExtension
       case safeHead cabalFiles of
         Nothing        -> go ps
-        Just cabalFile -> pure $ Just cabalFile
+        Just cabalFile -> guardAgainstHpack path cabalFile
+          where 
+            guardAgainstHpack :: FilePath -> FilePath -> IO (Maybe FilePath)
+            guardAgainstHpack path cabalFile = do
+              exists <- doesFileExist $ path </> "package.yaml"
+              if exists then pure Nothing else pure $ Just cabalFile
 
 -- | Gives cabal file's contents or throws error.
 --   Inspired by @readCabalFile@ in cabal-add,
